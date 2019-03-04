@@ -58,11 +58,13 @@ class GameScene: SKScene {
     
     /**
      * Responsible for moving the foreground tiles from out of screen on the left to the start of the queue
-     * on the right of the screen.
+     * on the right of the screen. Used to animate the foreground to give a sense of progress in the game.
      */
     func updateForeground() {
         worldNode.enumerateChildNodes(withName: "Foreground") { (node, stop) in
             if let foreground = node as? SKSpriteNode {
+                // Use set speed and the change in time to calculate distance covered in the last frame.
+                // From formula: distance = speed x time.
                 let moveAmount = CGPoint(x: -self.groundSpeed * CGFloat(self.deltaTime), y: 0)
                 foreground.position += moveAmount
                 
