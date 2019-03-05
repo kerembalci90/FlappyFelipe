@@ -12,6 +12,7 @@ import GameplayKit
 enum Layer: CGFloat {
     case background
     case foreground
+    case player
 }
 
 class GameScene: SKScene {
@@ -25,10 +26,20 @@ class GameScene: SKScene {
     var deltaTime: TimeInterval = 0;
     var lastUpdateTimeInterval : TimeInterval = 0;
     
+    let player = PlayerEntity(imageName: "Bird0")
+    
     override func didMove(to view: SKView) {
         setupBackground()
         setupForeground()
+        setupPlayer()
         addChild(worldNode)
+    }
+    
+    func setupPlayer() {
+        player.spriteComponent.node.position = CGPoint(x: size.width * 0.2, y: playableHeight * 0.4 + playableStart)
+        player.spriteComponent.node.zPosition = Layer.player.rawValue
+        addChild(player.spriteComponent.node)
+        player.movementComponent.groundYPosition = playableStart
     }
     
     func setupBackground() {
@@ -84,5 +95,10 @@ class GameScene: SKScene {
         lastUpdateTimeInterval = currentTime
         
         updateForeground()
+        player.movementComponent.update(deltaTime: deltaTime)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        player.movementComponent.applyImpulse(lastUpdateTimeInterval)
     }
 }
