@@ -16,7 +16,14 @@ enum Layer: CGFloat {
     case player
 }
 
-class GameScene: SKScene {
+struct PhysicsCategory {
+    static let None: UInt32 = 0
+    static let Player: UInt32 = 0b1
+    static let Obstacle: UInt32 = 0b10
+    static let Ground: UInt32 = 0b100
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let worldNode = SKNode()
     var playableStart: CGFloat = 0
@@ -39,7 +46,13 @@ class GameScene: SKScene {
         setupForeground()
         setupPlayer()
         startSpawning()
+        setupWorldPhyics()
         addChild(worldNode)
+    }
+    
+    func setupWorldPhyics() {
+        physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+        physicsWorld.contactDelegate = self
     }
     
     func setupPlayer() {
@@ -108,6 +121,14 @@ class GameScene: SKScene {
         
         playableStart = size.height - background.size.height;
         playableHeight = background.size.height
+        
+        //Apply physics
+        let lowerLeft = CGPoint(x: 0, y: playableStart)
+        let lowerRight = CGPoint(x: size.width, y: playableStart)
+        physicsBody = SKPhysicsBody(edgeFrom: lowerLeft, to: lowerRight)
+        physicsBody?.categoryBitMask = PhysicsCategory.Ground
+        physicsBody?.collisionBitMask = 0
+        physicsBody?.contactTestBitMask = PhysicsCategory.Player
     }
     
     func setupForeground() {
@@ -139,6 +160,16 @@ class GameScene: SKScene {
                     foreground.position += CGPoint(x: foreground.size.width * CGFloat(self.numberOfForegrounds), y: 0)
                 }
             }
+        }
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let otherBody = contact.bodyA.categoryBitMask == PhysicsCategory.Player ? contact.bodyB : contact.bodyA
+        if otherBody.categoryBitMask == PhysicsCategory.Ground {
+            print("hit ground")
+        }
+        if otherBody.categoryBitMask == PhysicsCategory.Obstacle {
+            print("hit obstacle")
         }
     }
     

@@ -22,6 +22,15 @@ class PlayerEntity: GKEntity {
         
         movementComponent = MovementComponent(entity: self)
         addComponent(movementComponent)
+        
+        setupPhyicsBody()
+    }
+    
+    private func setupPhyicsBody() {
+        spriteComponent.node.physicsBody = SKPhysicsBody(texture: spriteComponent.node.texture!, size: spriteComponent.node.frame.size)
+        spriteComponent.node.physicsBody?.categoryBitMask = PhysicsCategory.Player
+        spriteComponent.node.physicsBody?.collisionBitMask = 0
+        spriteComponent.node.physicsBody?.contactTestBitMask = PhysicsCategory.Obstacle | PhysicsCategory.Ground
     }
     
     required init?(coder aDecoder: NSCoder) {
