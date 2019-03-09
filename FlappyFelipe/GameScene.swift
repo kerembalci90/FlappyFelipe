@@ -11,6 +11,7 @@ import GameplayKit
 
 enum Layer: CGFloat {
     case background
+    case obstacle
     case foreground
     case player
 }
@@ -20,11 +21,16 @@ class GameScene: SKScene {
     let worldNode = SKNode()
     var playableStart: CGFloat = 0
     var playableHeight: CGFloat = 0
+    let bottomObstacleMinFraction: CGFloat = 0.1
+    let bottomObstacleMaxFraction: CGFloat = 0.6
+    let gapMultiplier: CGFloat = 4.5 // Higher the number easier the game
     
     let numberOfForegrounds = 3
     let groundSpeed: CGFloat = 150
     var deltaTime: TimeInterval = 0;
     var lastUpdateTimeInterval : TimeInterval = 0;
+    let firstObstacleSpawnDelay: TimeInterval = 1.75
+    let eachObstacleSpawnDelay: TimeInterval = 1.5
     
     let player = PlayerEntity(imageName: "Bird0")
     
@@ -32,6 +38,7 @@ class GameScene: SKScene {
         setupBackground()
         setupForeground()
         setupPlayer()
+        startSpawning()
         addChild(worldNode)
     }
     
@@ -40,6 +47,55 @@ class GameScene: SKScene {
         player.spriteComponent.node.zPosition = Layer.player.rawValue
         addChild(player.spriteComponent.node)
         player.movementComponent.groundYPosition = playableStart
+    }
+    
+    func createObstacle() -> SKSpriteNode {
+        let obstacle = ObstacleEntity(imageName: "Cactus")
+        let obstacleNode = obstacle.spriteComponent.node
+        obstacleNode.zPosition = Layer.obstacle.rawValue
+        return obstacleNode
+    }
+    
+    func startSpawning() {
+        let firstSpawnDelay = SKAction.wait(forDuration: firstObstacleSpawnDelay)
+        let spawnNewObstacle = SKAction.run(spawnObstacle)
+        let addDelayToNextSpawn = SKAction.wait(forDuration: eachObstacleSpawnDelay)
+        
+        let obstacleSpawnSequence = SKAction.sequence([spawnNewObstacle, addDelayToNextSpawn])
+        let obstacleSpawnLoop = SKAction.repeatForever(obstacleSpawnSequence)
+        let completeObstacleSpawnSequence = SKAction.sequence([firstSpawnDelay, obstacleSpawnLoop])
+        run(completeObstacleSpawnSequence)
+    }
+    
+    func spawnObstacle() {
+        //Bottom obstacle
+        let bottomObstacle = createObstacle()
+        let startX = size.width + bottomObstacle.size.width / 2
+        
+        let bottomObstacleMinYPosition = (playableStart - bottomObstacle.size.height / 2) + playableHeight * bottomObstacleMinFraction
+        let bottomObstacleMaxYPosition = (playableStart - bottomObstacle.size.height / 2) + playableHeight * bottomObstacleMaxFraction
+        
+        let randomSource = GKARC4RandomSource()
+        let randomDistribution = GKRandomDistribution(randomSource: randomSource, lowestValue: Int(round(bottomObstacleMinYPosition)), highestValue: Int(round(bottomObstacleMaxYPosition)))
+        let startY = randomDistribution.nextInt()
+        
+        bottomObstacle.position = CGPoint(x: startX, y: CGFloat(startY))
+        worldNode.addChild(bottomObstacle)
+        
+        //Top obstacle
+        let topObstacle = createObstacle()
+        topObstacle.zRotation = CGFloat(180).degreesToRadians()
+        topObstacle.position = CGPoint(x: startX, y: bottomObstacle.position.y + bottomObstacle.size.height / 2 + topObstacle.size.height / 2 + gapMultiplier * player.spriteComponent.node.size.height)
+        worldNode.addChild(topObstacle)
+        
+        let moveX = size.width + bottomObstacle.size.width
+        let moveDuration = moveX / groundSpeed // t = X / V
+        let sequence = SKAction.sequence([
+            SKAction.moveBy(x: -moveX, y: 0, duration: TimeInterval(moveDuration)),
+            SKAction.removeFromParent()
+        ])
+        topObstacle.run(sequence)
+        bottomObstacle.run(sequence)
     }
     
     func setupBackground() {

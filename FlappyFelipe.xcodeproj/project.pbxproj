@@ -36,6 +36,7 @@
 		5594A170222E04850042A01E /* PlayerEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A16F222E04850042A01E /* PlayerEntity.swift */; };
 		5594A172222E04A10042A01E /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A171222E04A10042A01E /* SpriteComponent.swift */; };
 		5594A174222E09DD0042A01E /* MovementComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A173222E09DD0042A01E /* MovementComponent.swift */; };
+		5594A1762233555F0042A01E /* ObstacleEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A1752233555F0042A01E /* ObstacleEntity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		5594A16F222E04850042A01E /* PlayerEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEntity.swift; sourceTree = "<group>"; };
 		5594A171222E04A10042A01E /* SpriteComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		5594A173222E09DD0042A01E /* MovementComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementComponent.swift; sourceTree = "<group>"; };
+		5594A1752233555F0042A01E /* ObstacleEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObstacleEntity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				5594A16F222E04850042A01E /* PlayerEntity.swift */,
+				5594A1752233555F0042A01E /* ObstacleEntity.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 				5594A15B222CA78C0042A01E /* SKTTimingFunctions.swift in Sources */,
 				5594A170222E04850042A01E /* PlayerEntity.swift in Sources */,
 				5594A162222CA78C0042A01E /* Vector3.swift in Sources */,
+				5594A1762233555F0042A01E /* ObstacleEntity.swift in Sources */,
 				5594A172222E04A10042A01E /* SpriteComponent.swift in Sources */,
 				5594A15C222CA78C0042A01E /* SKAction+Extensions.swift in Sources */,
 				5594A12D222C465D0042A01E /* GameViewController.swift in Sources */,
