@@ -40,12 +40,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let eachObstacleSpawnDelay: TimeInterval = 1.5
     
     let player = PlayerEntity(imageName: "Bird0")
+    let popSoundAction = SKAction.playSoundFileNamed("pop.wav", waitForCompletion: false)
     
     lazy var stateMachine: GKStateMachine = GKStateMachine(states: [
-            PlayingState(scene: self),
-            FallingState(scene: self),
-            GameOverState(scene: self)
-    ])
+        PlayingState(scene: self),
+        FallingState(scene: self),
+        GameOverState(scene: self)
+        ])
     
     override func didMove(to view: SKView) {
         setupBackground()
@@ -121,7 +122,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let sequence = SKAction.sequence([
             SKAction.moveBy(x: -moveX, y: 0, duration: TimeInterval(moveDuration)),
             SKAction.removeFromParent()
-        ])
+            ])
         topObstacle.run(sequence)
         bottomObstacle.run(sequence)
     }
@@ -202,6 +203,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        player.movementComponent.applyImpulse(lastUpdateTimeInterval)
+        switch stateMachine.currentState {
+            case is PlayingState:
+                player.movementComponent.applyImpulse(lastUpdateTimeInterval)
+            case is GameOverState:
+                restartGame(PlayingState.self)
+            default:
+                break
+        }        
+    }
+    
+    func restartGame(_ stateClass: AnyClass) {
+        run(popSoundAction)
+        let newScene = GameScene(size: size)
+        let transition = SKTransition.fade(withDuration: 0.02)
+        view?.presentScene(newScene, transition: transition)
     }
 }
