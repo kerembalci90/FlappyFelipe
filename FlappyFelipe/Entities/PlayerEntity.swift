@@ -26,7 +26,7 @@ class PlayerEntity: GKEntity {
         setupPhyicsBody()
     }
     
-    private func setupPhyicsBody() {
+    fileprivate func setupPhyicsBody() {
         spriteComponent.node.physicsBody = SKPhysicsBody(texture: spriteComponent.node.texture!, size: spriteComponent.node.frame.size)
         spriteComponent.node.physicsBody?.categoryBitMask = PhysicsCategory.Player
         spriteComponent.node.physicsBody?.collisionBitMask = 0

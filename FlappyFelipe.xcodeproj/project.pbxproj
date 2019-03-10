@@ -37,6 +37,9 @@
 		5594A172222E04A10042A01E /* SpriteComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A171222E04A10042A01E /* SpriteComponent.swift */; };
 		5594A174222E09DD0042A01E /* MovementComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A173222E09DD0042A01E /* MovementComponent.swift */; };
 		5594A1762233555F0042A01E /* ObstacleEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A1752233555F0042A01E /* ObstacleEntity.swift */; };
+		5594A179223578BB0042A01E /* PlayingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A178223578BB0042A01E /* PlayingState.swift */; };
+		5594A17B223578D90042A01E /* FallingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A17A223578D90042A01E /* FallingState.swift */; };
+		5594A17D223578E40042A01E /* GameOverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A17C223578E40042A01E /* GameOverState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +75,9 @@
 		5594A171222E04A10042A01E /* SpriteComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteComponent.swift; sourceTree = "<group>"; };
 		5594A173222E09DD0042A01E /* MovementComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementComponent.swift; sourceTree = "<group>"; };
 		5594A1752233555F0042A01E /* ObstacleEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObstacleEntity.swift; sourceTree = "<group>"; };
+		5594A178223578BB0042A01E /* PlayingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingState.swift; sourceTree = "<group>"; };
+		5594A17A223578D90042A01E /* FallingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallingState.swift; sourceTree = "<group>"; };
+		5594A17C223578E40042A01E /* GameOverState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,7 @@
 		5594A123222C465D0042A01E /* FlappyFelipe */ = {
 			isa = PBXGroup;
 			children = (
+				5594A1772235789E0042A01E /* GameStates */,
 				5594A16E222E04710042A01E /* Components */,
 				5594A16D222E04670042A01E /* Entities */,
 				5594A13C222CA78C0042A01E /* Resources */,
@@ -185,6 +192,16 @@
 				5594A173222E09DD0042A01E /* MovementComponent.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		5594A1772235789E0042A01E /* GameStates */ = {
+			isa = PBXGroup;
+			children = (
+				5594A178223578BB0042A01E /* PlayingState.swift */,
+				5594A17A223578D90042A01E /* FallingState.swift */,
+				5594A17C223578E40042A01E /* GameOverState.swift */,
+			);
+			path = GameStates;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -276,14 +293,17 @@
 				5594A170222E04850042A01E /* PlayerEntity.swift in Sources */,
 				5594A162222CA78C0042A01E /* Vector3.swift in Sources */,
 				5594A1762233555F0042A01E /* ObstacleEntity.swift in Sources */,
+				5594A17B223578D90042A01E /* FallingState.swift in Sources */,
 				5594A172222E04A10042A01E /* SpriteComponent.swift in Sources */,
 				5594A15C222CA78C0042A01E /* SKAction+Extensions.swift in Sources */,
 				5594A12D222C465D0042A01E /* GameViewController.swift in Sources */,
 				5594A15A222CA78C0042A01E /* Int+Extensions.swift in Sources */,
 				5594A15F222CA78C0042A01E /* CGPoint+Extensions.swift in Sources */,
 				5594A15E222CA78C0042A01E /* SKNode+Extensions.swift in Sources */,
+				5594A17D223578E40042A01E /* GameOverState.swift in Sources */,
 				5594A125222C465D0042A01E /* AppDelegate.swift in Sources */,
 				5594A174222E09DD0042A01E /* MovementComponent.swift in Sources */,
+				5594A179223578BB0042A01E /* PlayingState.swift in Sources */,
 				5594A158222CA78C0042A01E /* SKColor+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

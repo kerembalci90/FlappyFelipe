@@ -22,7 +22,7 @@ class ObstacleEntity: GKEntity {
         setupPhysicsBody()
     }
     
-    private func setupPhysicsBody() {
+    fileprivate func setupPhysicsBody() {
         spriteComponent.node.physicsBody = SKPhysicsBody(rectangleOf: spriteComponent.node.size)
         spriteComponent.node.physicsBody?.categoryBitMask = PhysicsCategory.Obstacle
         spriteComponent.node.physicsBody?.collisionBitMask = 0

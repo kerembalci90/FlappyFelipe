@@ -41,13 +41,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let player = PlayerEntity(imageName: "Bird0")
     
+    lazy var stateMachine: GKStateMachine = GKStateMachine(states: [
+            PlayingState(scene: self),
+            FallingState(scene: self),
+            GameOverState(scene: self)
+    ])
+    
     override func didMove(to view: SKView) {
         setupBackground()
         setupForeground()
         setupPlayer()
-        startSpawning()
+        //startSpawning()
         setupWorldPhyics()
         addChild(worldNode)
+        stateMachine.enter(PlayingState.self)
     }
     
     func setupWorldPhyics() {
@@ -66,6 +73,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let obstacle = ObstacleEntity(imageName: "Cactus")
         let obstacleNode = obstacle.spriteComponent.node
         obstacleNode.zPosition = Layer.obstacle.rawValue
+        obstacleNode.name = "Obstacle"
         return obstacleNode
     }
     
@@ -77,7 +85,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let obstacleSpawnSequence = SKAction.sequence([spawnNewObstacle, addDelayToNextSpawn])
         let obstacleSpawnLoop = SKAction.repeatForever(obstacleSpawnSequence)
         let completeObstacleSpawnSequence = SKAction.sequence([firstSpawnDelay, obstacleSpawnLoop])
-        run(completeObstacleSpawnSequence)
+        run(completeObstacleSpawnSequence, withKey: "ObstacleSpawnSequence")
+    }
+    
+    func stopSpawning() {
+        removeAction(forKey: "ObstacleSpawnSequence")
+        worldNode.enumerateChildNodes(withName: "Obstacle") { (node, stop) in
+            node.removeAllActions()
+        }
     }
     
     func spawnObstacle() {
@@ -166,10 +181,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         let otherBody = contact.bodyA.categoryBitMask == PhysicsCategory.Player ? contact.bodyB : contact.bodyA
         if otherBody.categoryBitMask == PhysicsCategory.Ground {
-            print("hit ground")
+            stateMachine.enter(GameOverState.self)
         }
         if otherBody.categoryBitMask == PhysicsCategory.Obstacle {
-            print("hit obstacle")
+            stateMachine.enter(FallingState.self)
         }
     }
     
@@ -181,7 +196,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         deltaTime = currentTime - lastUpdateTimeInterval
         lastUpdateTimeInterval = currentTime
         
-        updateForeground()
+        // updateForeground()
+        stateMachine.update(deltaTime: currentTime)
         player.movementComponent.update(deltaTime: deltaTime)
     }
     
