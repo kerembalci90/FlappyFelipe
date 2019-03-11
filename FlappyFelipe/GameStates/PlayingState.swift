@@ -27,5 +27,6 @@ class PlayingState: GKState {
     
     override func update(deltaTime seconds: TimeInterval) {
         scene.updateForeground()
+        scene.updateScore()
     }
 }

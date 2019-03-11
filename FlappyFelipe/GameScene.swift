@@ -14,6 +14,7 @@ enum Layer: CGFloat {
     case obstacle
     case foreground
     case player
+    case ui
 }
 
 struct PhysicsCategory {
@@ -48,11 +49,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         GameOverState(scene: self)
         ])
     
+    var score: Int = 0
+    var scoreLabel: SKLabelNode!
+    var fontName: String = "AmericanTypewriter-Bold"
+    var margin: CGFloat = 20.0
+    let coinSoundAction = SKAction.playSoundFileNamed("coin.wav", waitForCompletion: false)
+    
     override func didMove(to view: SKView) {
         setupBackground()
         setupForeground()
         setupPlayer()
-        //startSpawning()
+        setupScoreLabel()
         setupWorldPhyics()
         addChild(worldNode)
         stateMachine.enter(PlayingState.self)
@@ -70,11 +77,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.movementComponent.groundYPosition = playableStart
     }
     
+    func setupScoreLabel() {
+        scoreLabel = SKLabelNode(fontNamed: fontName)
+        scoreLabel.fontColor = SKColor(red: 101.0/255.0, green: 71.0/255.0, blue: 73.0/255.0, alpha: 1.0)
+        scoreLabel.position = CGPoint(x: size.width / 2, y: size.height - margin)
+        scoreLabel.verticalAlignmentMode = .top
+        scoreLabel.zPosition = Layer.ui.rawValue
+        scoreLabel.text = "\(score)"
+        worldNode.addChild(scoreLabel)
+    }
+    
     func createObstacle() -> SKSpriteNode {
         let obstacle = ObstacleEntity(imageName: "Cactus")
         let obstacleNode = obstacle.spriteComponent.node
         obstacleNode.zPosition = Layer.obstacle.rawValue
         obstacleNode.name = "Obstacle"
+        obstacleNode.userData = NSMutableDictionary()
         return obstacleNode
     }
     
@@ -174,6 +192,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 if foreground.position.x < -foreground.size.width {
                     foreground.position += CGPoint(x: foreground.size.width * CGFloat(self.numberOfForegrounds), y: 0)
+                }
+            }
+        }
+    }
+    
+    func updateScore() {
+        worldNode.enumerateChildNodes(withName: "Obstacle") { (node, stop) in
+            if let obstacle = node as? SKSpriteNode {
+                if let passed = obstacle.userData?["Passed"] as? NSNumber {
+                    if passed.boolValue {
+                        return
+                    }
+                }
+                
+                let playerNode = self.player.spriteComponent.node
+                if playerNode.position.x > obstacle.position.x + obstacle.size.width / 2 {
+                    self.run(self.coinSoundAction)
+                    self.score += 1
+                    self.scoreLabel.text = "\(self.score / 2)"
+                    obstacle.userData?["Passed"] = NSNumber(value: true as Bool)
+                    obstacle.userData?.setValue(1, forKey: "Passed")
                 }
             }
         }
