@@ -43,6 +43,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let player = PlayerEntity(imageName: "Bird0")
     let popSoundAction = SKAction.playSoundFileNamed("pop.wav", waitForCompletion: false)
     
+    var initalState: AnyClass
     lazy var stateMachine: GKStateMachine = GKStateMachine(states: [
         MainMenuState(scene: self),
         TutorialState(scene: self),
@@ -57,14 +58,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var margin: CGFloat = 20.0
     let coinSoundAction = SKAction.playSoundFileNamed("coin.wav", waitForCompletion: false)
     
+    init(size: CGSize, stateClass: AnyClass) {
+        initalState = stateClass
+        super.init(size: size)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didMove(to view: SKView) {
-        //setupBackground()
-        //setupForeground()
-        //setupPlayer()
-        //setupScoreLabel()
-        //setupWorldPhyics()
+        setupWorldPhyics()
         addChild(worldNode)
-        stateMachine.enter(MainMenuState.self)
+        stateMachine.enter(initalState)
     }
     
     func setupWorldPhyics() {
@@ -238,17 +244,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         deltaTime = currentTime - lastUpdateTimeInterval
         lastUpdateTimeInterval = currentTime
         
-        // updateForeground()
         stateMachine.update(deltaTime: currentTime)
         player.movementComponent.update(deltaTime: deltaTime)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch stateMachine.currentState {
+            case is MainMenuState:
+                restartGame(TutorialState.self)
+            case is TutorialState:
+                stateMachine.enter(PlayingState.self)
             case is PlayingState:
                 player.movementComponent.applyImpulse(lastUpdateTimeInterval)
             case is GameOverState:
-                restartGame(PlayingState.self)
+                restartGame(MainMenuState.self)
             default:
                 break
         }        
@@ -256,7 +265,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func restartGame(_ stateClass: AnyClass) {
         run(popSoundAction)
-        let newScene = GameScene(size: size)
+        let newScene = GameScene(size: size, stateClass: stateClass)
         let transition = SKTransition.fade(withDuration: 0.02)
         view?.presentScene(newScene, transition: transition)
     }
