@@ -40,6 +40,8 @@
 		5594A179223578BB0042A01E /* PlayingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A178223578BB0042A01E /* PlayingState.swift */; };
 		5594A17B223578D90042A01E /* FallingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A17A223578D90042A01E /* FallingState.swift */; };
 		5594A17D223578E40042A01E /* GameOverState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A17C223578E40042A01E /* GameOverState.swift */; };
+		5594A17F22374D7D0042A01E /* MainMenuState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A17E22374D7D0042A01E /* MainMenuState.swift */; };
+		5594A18122374D850042A01E /* TutorialState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5594A18022374D850042A01E /* TutorialState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		5594A178223578BB0042A01E /* PlayingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingState.swift; sourceTree = "<group>"; };
 		5594A17A223578D90042A01E /* FallingState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FallingState.swift; sourceTree = "<group>"; };
 		5594A17C223578E40042A01E /* GameOverState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverState.swift; sourceTree = "<group>"; };
+		5594A17E22374D7D0042A01E /* MainMenuState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuState.swift; sourceTree = "<group>"; };
+		5594A18022374D850042A01E /* TutorialState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +204,8 @@
 				5594A178223578BB0042A01E /* PlayingState.swift */,
 				5594A17A223578D90042A01E /* FallingState.swift */,
 				5594A17C223578E40042A01E /* GameOverState.swift */,
+				5594A17E22374D7D0042A01E /* MainMenuState.swift */,
+				5594A18022374D850042A01E /* TutorialState.swift */,
 			);
 			path = GameStates;
 			sourceTree = "<group>";
@@ -287,6 +293,7 @@
 				5594A163222CA78C0042A01E /* CGFloat+Extensions.swift in Sources */,
 				5594A160222CA78C0042A01E /* SKTEffects.swift in Sources */,
 				5594A12B222C465D0042A01E /* GameScene.swift in Sources */,
+				5594A17F22374D7D0042A01E /* MainMenuState.swift in Sources */,
 				5594A15D222CA78C0042A01E /* SKAction+SpecialEffects.swift in Sources */,
 				5594A161222CA78C0042A01E /* SKTAudio.swift in Sources */,
 				5594A15B222CA78C0042A01E /* SKTTimingFunctions.swift in Sources */,
@@ -301,6 +308,7 @@
 				5594A15F222CA78C0042A01E /* CGPoint+Extensions.swift in Sources */,
 				5594A15E222CA78C0042A01E /* SKNode+Extensions.swift in Sources */,
 				5594A17D223578E40042A01E /* GameOverState.swift in Sources */,
+				5594A18122374D850042A01E /* TutorialState.swift in Sources */,
 				5594A125222C465D0042A01E /* AppDelegate.swift in Sources */,
 				5594A174222E09DD0042A01E /* MovementComponent.swift in Sources */,
 				5594A179223578BB0042A01E /* PlayingState.swift in Sources */,

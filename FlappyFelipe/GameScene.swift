@@ -44,6 +44,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let popSoundAction = SKAction.playSoundFileNamed("pop.wav", waitForCompletion: false)
     
     lazy var stateMachine: GKStateMachine = GKStateMachine(states: [
+        MainMenuState(scene: self),
+        TutorialState(scene: self),
         PlayingState(scene: self),
         FallingState(scene: self),
         GameOverState(scene: self)
@@ -56,13 +58,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let coinSoundAction = SKAction.playSoundFileNamed("coin.wav", waitForCompletion: false)
     
     override func didMove(to view: SKView) {
-        setupBackground()
-        setupForeground()
-        setupPlayer()
-        setupScoreLabel()
-        setupWorldPhyics()
+        //setupBackground()
+        //setupForeground()
+        //setupPlayer()
+        //setupScoreLabel()
+        //setupWorldPhyics()
         addChild(worldNode)
-        stateMachine.enter(PlayingState.self)
+        stateMachine.enter(MainMenuState.self)
     }
     
     func setupWorldPhyics() {
