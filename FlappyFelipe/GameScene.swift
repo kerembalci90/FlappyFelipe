@@ -137,10 +137,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bottomObstacle.position = CGPoint(x: startX, y: CGFloat(startY))
         worldNode.addChild(bottomObstacle)
         
+        //Calculate random gap distribution
+        let random = GKARC4RandomSource()
+        let randomGapDistribution = GKRandomDistribution(randomSource: random, lowestValue: Int(3), highestValue: Int(5))
+        let randomGapMultiplierBase = randomGapDistribution.nextInt()
+        let randomGapMultiplierFloat = randomGapDistribution.nextUniform()
+        let randomGapNumber = Float(randomGapMultiplierBase) + randomGapMultiplierFloat
+        
         //Top obstacle
         let topObstacle = createObstacle()
         topObstacle.zRotation = CGFloat(180).degreesToRadians()
-        topObstacle.position = CGPoint(x: startX, y: bottomObstacle.position.y + bottomObstacle.size.height / 2 + topObstacle.size.height / 2 + gapMultiplier * player.spriteComponent.node.size.height)
+        let gapHeight = CGFloat(randomGapNumber) * player.spriteComponent.node.size.height
+        topObstacle.position = CGPoint(x: startX, y: bottomObstacle.position.y + bottomObstacle.size.height / 2 + topObstacle.size.height / 2 + gapHeight)
         worldNode.addChild(topObstacle)
         
         let moveX = size.width + bottomObstacle.size.width
