@@ -12,8 +12,10 @@ import GameplayKit
 class PlayerEntity: GKEntity {
     var spriteComponent: SpriteComponent!
     var movementComponent: MovementComponent!
+    var animationComponent: AnimationComponent!
     
     var movementAllowed = false
+    var numberOfFrames = 3
     
     init(imageName: String) {
         super.init()
@@ -25,10 +27,23 @@ class PlayerEntity: GKEntity {
         movementComponent = MovementComponent(entity: self)
         addComponent(movementComponent)
         
+        setupAnimationComponent()
         setupPhyicsBody()
     }
     
-    fileprivate func setupPhyicsBody() {
+    private func setupAnimationComponent() {
+        var textures: Array<SKTexture> = []
+        for i in 0..<numberOfFrames {
+            textures.append(SKTexture(imageNamed: "Bird\(i)"))
+        }
+        for i in stride(from: numberOfFrames, through: 0, by: -1) {
+            textures.append(SKTexture(imageNamed: "Bird\(i)"))
+        }
+        animationComponent = AnimationComponent(entity: self, textures: textures)
+        addComponent(animationComponent)
+    }
+    
+    private func setupPhyicsBody() {
         spriteComponent.node.physicsBody = SKPhysicsBody(texture: spriteComponent.node.texture!, size: spriteComponent.node.frame.size)
         spriteComponent.node.physicsBody?.categoryBitMask = PhysicsCategory.Player
         spriteComponent.node.physicsBody?.collisionBitMask = 0

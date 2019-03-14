@@ -254,6 +254,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         stateMachine.update(deltaTime: currentTime)
         player.movementComponent.update(deltaTime: deltaTime)
+        player.animationComponent.update(deltaTime: deltaTime)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
