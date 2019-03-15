@@ -26,6 +26,7 @@ class PlayerEntity: GKEntity {
         
         movementComponent = MovementComponent(entity: self)
         addComponent(movementComponent)
+        movementComponent.applyInitialImpulse()
         
         setupAnimationComponent()
         setupPhyicsBody()

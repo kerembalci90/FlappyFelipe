@@ -34,6 +34,10 @@ class MovementComponent: GKComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func applyInitialImpulse() {
+        velocity = CGPoint(x: 0, y: impulse * 2)
+    }
+    
     func applyImpulse(_ lastUpdateTime: TimeInterval) {
         velocity = CGPoint(x: 0, y: impulse)
         
