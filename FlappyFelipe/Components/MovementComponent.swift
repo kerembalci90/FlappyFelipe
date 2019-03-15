@@ -17,6 +17,14 @@ class MovementComponent: GKComponent {
     var velocity = CGPoint.zero
     var groundYPosition: CGFloat = 0
     
+    var velocityModifier: CGFloat = 1000.0
+    var angularVelocity: CGFloat = 0.0
+    let minDegrees: CGFloat = -90
+    let maxDegrees: CGFloat = 25
+    
+    var lastTouchTime: TimeInterval = 0
+    var lastTouchY: CGFloat = 0.0
+    
     init(entity: GKEntity) {
         self.spriteComponent = entity.component(ofType: SpriteComponent.self)!
         super.init()        
@@ -28,6 +36,10 @@ class MovementComponent: GKComponent {
     
     func applyImpulse(_ lastUpdateTime: TimeInterval) {
         velocity = CGPoint(x: 0, y: impulse)
+        
+        angularVelocity = velocityModifier.degreesToRadians()
+        lastTouchTime = lastUpdateTime
+        lastTouchY = spriteComponent.node.position.y
     }
     
     func applyMovement(timeElapsed: TimeInterval) {
@@ -40,6 +52,15 @@ class MovementComponent: GKComponent {
         // Apply Velocity
         let velocityStep = velocity * CGFloat(timeElapsed)
         spriteNode.position += velocityStep
+        
+        // Apply angular velocity and rotation
+        if spriteNode.position.y < lastTouchY {
+            angularVelocity = -velocityModifier.degreesToRadians()
+        }
+        
+        let angularStep = angularVelocity * CGFloat(timeElapsed)
+        spriteNode.zRotation += angularStep
+        spriteNode.zRotation = min(max(spriteNode.zRotation, minDegrees.degreesToRadians()), maxDegrees.degreesToRadians())
         
         // Temporary ground hit
         if spriteNode.position.y - spriteNode.size.height / 2 < groundYPosition {
