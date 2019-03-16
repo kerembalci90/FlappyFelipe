@@ -14,6 +14,7 @@ enum Layer: CGFloat {
     case obstacle
     case foreground
     case player
+    case effects
     case ui
 }
 
