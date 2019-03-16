@@ -9,7 +9,7 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, GameSceneDelegate {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -17,7 +17,7 @@ class GameViewController: UIViewController {
         if let skView = self.view as? SKView {
             if skView.scene == nil {
                 let aspectRatio = skView.bounds.size.height / skView.bounds.size.width
-                let scene = GameScene(size: CGSize(width: 320, height: 320 * aspectRatio), stateClass: MainMenuState.self)
+                let scene = GameScene(size: CGSize(width: 320, height: 320 * aspectRatio), stateClass: MainMenuState.self, delegate: self)
                 
                 skView.showsFPS = false
                 skView.showsNodeCount = false
@@ -41,5 +41,18 @@ class GameViewController: UIViewController {
     
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    func screenshot() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 1.0)
+        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+    
+    func shareString(_ string: String, url: URL, image: UIImage) {
+        let activityViewController = UIActivityViewController(activityItems: [string, url, image], applicationActivities: nil)
+        present(activityViewController, animated: true, completion: nil)
     }
 }

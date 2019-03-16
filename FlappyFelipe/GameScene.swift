@@ -24,7 +24,14 @@ struct PhysicsCategory {
     static let Ground: UInt32 = 0b100
 }
 
+protocol GameSceneDelegate {
+    func screenshot() -> UIImage
+    func shareString(_ string: String, url: URL, image: UIImage)
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
+    var gameSceneDelegate: GameSceneDelegate
+    let appStoreLink = "https://www.google.com"
     
     let worldNode = SKNode()
     var playableStart: CGFloat = 0
@@ -58,7 +65,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var margin: CGFloat = 20.0
     let coinSoundAction = SKAction.playSoundFileNamed("coin.wav", waitForCompletion: false)
     
-    init(size: CGSize, stateClass: AnyClass) {
+    init(size: CGSize, stateClass: AnyClass, delegate: GameSceneDelegate) {
+        self.gameSceneDelegate = delegate
         initalState = stateClass
         super.init(size: size)
     }
@@ -258,24 +266,61 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        switch stateMachine.currentState {
+        
+        if let touch = touches.first {
+            let touchLocation = touch.location(in: self)
+            
+            switch stateMachine.currentState {
             case is MainMenuState:
-                restartGame(TutorialState.self)
+                if ( touchLocation.y < size.height * 0.15) {
+                    learn()
+                } else if (touchLocation.x < size.width * 0.6) {
+                    restartGame(TutorialState.self)
+                } else {
+                    rateApp()
+                }
+                
             case is TutorialState:
                 stateMachine.enter(PlayingState.self)
             case is PlayingState:
                 player.movementComponent.applyImpulse(lastUpdateTimeInterval)
             case is GameOverState:
-                restartGame(TutorialState.self)
+                if ( touchLocation.x < size.width * 0.6) {
+                    restartGame(TutorialState.self)
+                } else {
+                    shareScore()
+                }
             default:
                 break
-        }        
+            }
+        }
     }
     
     func restartGame(_ stateClass: AnyClass) {
         run(popSoundAction)
-        let newScene = GameScene(size: size, stateClass: stateClass)
+        let newScene = GameScene(size: size, stateClass: stateClass, delegate: gameSceneDelegate)
         let transition = SKTransition.fade(withDuration: 0.02)
         view?.presentScene(newScene, transition: transition)
+    }
+    
+    func shareScore() {
+        let urlString = appStoreLink
+        let url = URL(string: urlString)
+        
+        let screenshot = gameSceneDelegate.screenshot()
+        let initialTextString = "WoW! I scored \(score / 2) points in Flappy Felipe"
+        gameSceneDelegate.shareString(initialTextString, url: url!, image: screenshot)
+    }
+    
+    func rateApp() {
+        let urlString = appStoreLink
+        let url = URL(string: urlString)
+        UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+    }
+    
+    func learn() {
+        let urlString = "https://www.google.com"
+        let url = URL(string: urlString)
+        UIApplication.shared.open(url!, options: [:], completionHandler: nil)
     }
 }
