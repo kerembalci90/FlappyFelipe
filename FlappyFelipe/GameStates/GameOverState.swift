@@ -129,5 +129,18 @@ class GameOverState: GKState {
             scene.popSoundAction
         ])
         scene.run(pops)
+        
+        #if os(tvOS)
+        //Apply bounce action to learn button
+        let ScaleUpAction = SKAction.scale(to: 1.02, duration: 0.75)
+        ScaleUpAction.timingMode = .easeInEaseOut
+        let ScaleDownAction = SKAction.scale(to: 0.98, duration: 0.75)
+        ScaleDownAction.timingMode = .easeInEaseOut
+        let bounceSequence = SKAction.sequence([ScaleUpAction,ScaleDownAction])
+        let bounceForeverSequence = SKAction.repeatForever(bounceSequence)
+        okButton.run(bounceForeverSequence)
+        okButton.position = CGPoint(x: scene.size.width / 2, y: scene.size.height / 2 - okButton.size.height)
+        shareButton.isHidden = true
+        #endif
     }
 }

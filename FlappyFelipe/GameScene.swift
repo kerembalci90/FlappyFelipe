@@ -30,6 +30,10 @@ protocol GameSceneDelegate {
     func shareString(_ string: String, url: URL, image: UIImage)
 }
 
+protocol TVControlScene {
+    func setupTVControls()
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameSceneDelegate: GameSceneDelegate
     let appStoreLink = "https://www.google.com"
@@ -41,7 +45,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let bottomObstacleMaxFraction: CGFloat = 0.6
     let gapMultiplier: CGFloat = 4.5 // Higher the number easier the game
     
-    let numberOfForegrounds = 3
+    var numberOfForegrounds = 3
     let groundSpeed: CGFloat = 150
     var deltaTime: TimeInterval = 0;
     var lastUpdateTimeInterval : TimeInterval = 0;
@@ -80,6 +84,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setupWorldPhyics()
         addChild(worldNode)
         stateMachine.enter(initalState)
+        
+        let scene = (self as SKScene)
+        if let scene = scene as? TVControlScene {
+            scene.setupTVControls()
+        }
     }
     
     func setupWorldPhyics() {
@@ -174,10 +183,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupBackground() {
         let background = SKSpriteNode(imageNamed: "Background")
         
-        background.anchorPoint = CGPoint(x: 0.5, y: 1.0)
-        background.position = CGPoint(x: size.width / 2, y: size.height)
-        background.zPosition = Layer.background.rawValue
-        worldNode.addChild(background)
+        let numberOfSpritesNeededToRenderBackground = Int(size.width / background.size.width) + 1
+        for i in 0..<numberOfSpritesNeededToRenderBackground {
+            let background = SKSpriteNode(imageNamed: "Background")
+            background.anchorPoint = CGPoint(x: 0.0, y: 1.0)
+            background.position = CGPoint(x: CGFloat(i) * background.size.width + 1, y: size.height)
+            background.zPosition = Layer.background.rawValue
+            background.name = "Background"
+            worldNode.addChild(background)
+        }
         
         playableStart = size.height - background.size.height;
         playableHeight = background.size.height
@@ -193,6 +207,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setupForeground() {
         
+        let foreground = SKSpriteNode(imageNamed: "Ground")
+        let numberOfSpritesNeededToRenderForeground = Int(size.width / foreground.size.width) + numberOfForegrounds
+        numberOfForegrounds = numberOfSpritesNeededToRenderForeground
         for i in 0..<numberOfForegrounds {
             let foreground = SKSpriteNode(imageNamed: "Ground")
             foreground.anchorPoint = CGPoint(x: 0.0, y: 1.0)
@@ -268,7 +285,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        #if os(iOS)
         if let touch = touches.first {
             let touchLocation = touch.location(in: self)
             
@@ -296,6 +313,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 break
             }
         }
+        #endif
     }
     
     func restartGame(_ stateClass: AnyClass) {
