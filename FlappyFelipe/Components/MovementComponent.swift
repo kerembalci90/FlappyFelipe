@@ -12,6 +12,8 @@ import GameplayKit
 class MovementComponent: GKComponent {
     var spriteComponent: SpriteComponent
     
+    let flapSoundAction = SKAction.playSoundFileNamed("flapping.wav", waitForCompletion: false)
+    
     let gravity: CGFloat = -1500
     let impulse = 400
     var velocity = CGPoint.zero
@@ -36,6 +38,7 @@ class MovementComponent: GKComponent {
     
     func applyInitialImpulse() {
         velocity = CGPoint(x: 0, y: impulse * 2)
+        spriteComponent.node.run(flapSoundAction)
     }
     
     func applyImpulse(_ lastUpdateTime: TimeInterval) {
@@ -44,6 +47,8 @@ class MovementComponent: GKComponent {
         angularVelocity = velocityModifier.degreesToRadians()
         lastTouchTime = lastUpdateTime
         lastTouchY = spriteComponent.node.position.y
+        
+        spriteComponent.node.run(flapSoundAction)
     }
     
     func applyMovement(timeElapsed: TimeInterval) {
