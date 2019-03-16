@@ -92,6 +92,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.spriteComponent.node.zPosition = Layer.player.rawValue
         addChild(player.spriteComponent.node)
         player.movementComponent.groundYPosition = playableStart
+        player.animationComponent.startWobble()
     }
     
     func setupScoreLabel() {

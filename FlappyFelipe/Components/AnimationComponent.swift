@@ -28,9 +28,27 @@ class AnimationComponent: GKComponent {
             if player.movementAllowed {
                 startAnimation()
             } else {
-                stopAction("Flap")
+                stopAnimation("Flap")
             }
         }
+    }
+    
+    func startWobble() {
+        let moveUp = SKAction.moveBy(x: 0, y: 10, duration: 0.4)
+        moveUp.timingMode = .easeInEaseOut
+        let moveDown = moveUp.reversed()
+        let wobbleSequence = SKAction.sequence([moveUp, moveDown])
+        let wobbleSequenceForever = SKAction.repeatForever(wobbleSequence)
+        spriteComponent.node.run(wobbleSequenceForever, withKey: "Wobble")
+        
+        let flapWings = SKAction.animate(with: textures, timePerFrame: 0.07)
+        let flapWingsForever = SKAction.repeatForever(flapWings)
+        spriteComponent.node.run(flapWingsForever, withKey: "Wobble-Forever")
+    }
+    
+    func stopWobble() {
+        stopAnimation("Wobble")
+        stopAnimation("Wobble-Forever")
     }
     
     func startAnimation() {
@@ -41,7 +59,7 @@ class AnimationComponent: GKComponent {
         }
     }
     
-    func stopAction(_ name: String) {
+    func stopAnimation(_ name: String) {
         spriteComponent.node.removeAction(forKey: name)
     }
 }

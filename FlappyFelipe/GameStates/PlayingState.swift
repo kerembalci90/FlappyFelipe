@@ -19,6 +19,7 @@ class PlayingState: GKState {
     
     override func didEnter(from previousState: GKState?) {
         scene.startSpawning()
+        scene.player.animationComponent.stopWobble()
         scene.player.movementAllowed = true
         scene.player.movementComponent.applyInitialImpulse()
     }
